@@ -1,88 +1,66 @@
+# 🎨 MNIST Handwritten Digit Generation using GAN
 
-# MNIST Handwritten Digit Generation using GAN
+<div align="center">
 
-This project implements a Generative Adversarial Network (GAN) to generate images of handwritten digits, trained on the MNIST dataset. The GAN consists of a generator model that learns to create realistic digit images and a discriminator model that learns to distinguish between real MNIST digits and fake (generated) digits.
+![Python](https://img.shields.io/badge/python-v3.7+-blue.svg)
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-active-success.svg)
 
----
+*Generating realistic handwritten digits using Generative Adversarial Networks*
 
-## Table of Contents
+[Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-model-architecture) • [Results](#-results) • [Contributing](#-contributing)
 
-- [Project Overview](#project-overview)  
-- [Features](#features)  
-- [Dataset](#dataset)  
-- [Prerequisites](#prerequisites)  
-- [Setup](#setup)  
-  - [1. Clone Repository (Optional)](#1-clone-repository-optional)  
-  - [2. Create Virtual Environment (Recommended)](#2-create-virtual-environment-recommended)  
-  - [3. Install Dependencies](#3-install-dependencies)  
-- [Usage](#usage)  
-  - [1. Configure Parameters (Optional)](#1-configure-parameters-optional)  
-  - [2. Run the Training Script](#2-run-the-training-script)  
-- [Model Architecture](#model-architecture)  
-  - [Generator](#generator)  
-  - [Discriminator](#discriminator)  
-  - [Combined GAN Model](#combined-gan-model)  
-- [Training Process](#training-process)  
-- [Outputs](#outputs)  
-- [File Description](#file-description)  
-- [Customization](#customization)  
-- [License](#license)  
+</div>
 
 ---
 
-## Project Overview
+## 🚀 Project Overview
 
-Generative Adversarial Networks (GANs) are a class of machine learning frameworks where two neural networks — a generator and a discriminator — compete in a zero-sum game. The generator creates fake data resembling real data, while the discriminator learns to distinguish real from fake. This project implements a basic GAN to generate 28x28 grayscale images of handwritten digits using the MNIST dataset.
+This project implements a **Generative Adversarial Network (GAN)** to generate realistic handwritten digit images using the famous MNIST dataset. The system consists of two competing neural networks:
 
----
+- 🎭 **Generator**: Creates fake digit images from random noise
+- 🕵️ **Discriminator**: Distinguishes between real and generated images
 
-## Features
+Through adversarial training, the generator learns to create increasingly realistic digits while the discriminator becomes better at detection, resulting in high-quality synthetic handwritten digits.
 
-- **MNIST Dataset:** Uses the standard handwritten digits dataset provided by Keras.  
-- **Generator Model:**  
-  - Takes random noise (latent vector) as input.  
-  - Uses dense and convolutional transpose layers to upsample to 28x28 images.  
-  - LeakyReLU activations with sigmoid output for pixel values between 0 and 1.  
-- **Discriminator Model:**  
-  - Binary classifier to distinguish real vs. fake images.  
-  - Uses convolutional layers with LeakyReLU and dropout for regularization.  
-  - Outputs a probability with sigmoid activation.  
-- **Combined GAN Model:**  
-  - Stacks generator and discriminator for training generator while freezing discriminator weights.  
-- **Training Loop:** Alternates training discriminator and generator with appropriate labels.  
-- **Performance Monitoring:** Prints losses, discriminator accuracy, saves generated image plots and model weights periodically.
+## ✨ Features
 
----
+### 🧠 **Advanced Neural Architecture**
+- **Generator**: Dense → Reshape → Conv2DTranspose layers with LeakyReLU
+- **Discriminator**: Conv2D layers with dropout regularization
+- **Optimized Training**: Adam optimizer with fine-tuned hyperparameters
 
-## Dataset
+### 📊 **Comprehensive Monitoring**
+- Real-time loss tracking for both networks
+- Discriminator accuracy metrics
+- Periodic image generation and model checkpointing
+- Visual progress tracking with generated digit grids
 
-The project uses the [MNIST dataset](https://keras.io/api/datasets/mnist/) of handwritten digits. Keras automatically downloads it if not found locally.
+### 🎯 **Production Ready**
+- Clean, modular code structure
+- Configurable hyperparameters
+- Automatic dataset handling
+- Model persistence and loading
 
----
+## 📦 Quick Start
 
-## Prerequisites
+### Prerequisites
+```bash
+Python 3.7+
+pip package manager
+```
 
-- Python 3.7 or higher  
-- pip package manager  
-- Git (optional, if cloning the repo)  
+### Installation
 
----
-
-## Setup
-
-### 1. Clone Repository (Optional)
-
-If you have a Git repository for this project:
-
+1. **Clone the repository**
 ```bash
 git clone <your-repository-url>
-cd <your-repository-name>
-Otherwise, just save the Python script locally (e.g., mnist_gan.py).
+cd mnist-gan
+```
 
-2. Create Virtual Environment (Recommended)
-bash
-Copy
-Edit
+2. **Set up virtual environment** (recommended)
+```bash
 python -m venv venv
 
 # Windows
@@ -90,119 +68,201 @@ venv\Scripts\activate
 
 # macOS/Linux
 source venv/bin/activate
-3. Install Dependencies
-Create a requirements.txt file with the following content:
+```
 
-nginx
-Copy
-Edit
-tensorflow
-numpy
-matplotlib
-Then install dependencies:
-
-bash
-Copy
-Edit
+3. **Install dependencies**
+```bash
 pip install -r requirements.txt
-Usage
-1. Configure Parameters (Optional)
-You can modify these parameters at the top or end of the Python script:
+```
 
-latent_dim — dimension of noise vector (default: 100)
+### Usage
 
-n_epochs — number of training epochs (default: 100)
-
-n_batch — batch size (default: 256)
-
-Adam optimizer parameters like learning rate and beta_1 are defined inside model functions.
-
-2. Run the Training Script
-bash
-Copy
-Edit
+**Run the training script:**
+```bash
 python mnist_gan.py
-The MNIST dataset will be automatically downloaded if not available.
+```
 
-Training progress (losses, accuracy) will be printed batch-wise.
+The model will:
+- 📥 Automatically download MNIST dataset
+- 🏋️ Start training with real-time progress updates
+- 💾 Save generated images every 10 epochs
+- 🔄 Create model checkpoints periodically
 
-Every 10 epochs:
+## 🏗️ Model Architecture
 
-Discriminator accuracy on real and fake samples is printed.
+### Generator Network
+```
+Input: Random Noise (100D) 
+    ↓
+Dense Layer (7×7×128)
+    ↓
+LeakyReLU + Reshape
+    ↓
+Conv2DTranspose (14×14×128)
+    ↓
+Conv2DTranspose (28×28×128)
+    ↓
+Conv2D + Sigmoid → Output: (28×28×1)
+```
 
-A plot of 100 generated images is saved as generated_plot_e<epoch_number>.png.
+### Discriminator Network
+```
+Input: Image (28×28×1)
+    ↓
+Conv2D + LeakyReLU + Dropout
+    ↓
+Conv2D + LeakyReLU + Dropout
+    ↓
+Flatten + Dense
+    ↓
+Sigmoid → Output: Real/Fake Probability
+```
 
-The generator model is saved as generator_model_<epoch_number>.h5.
+## 🎛️ Configuration
 
-Model Architecture
-Generator
-Input: latent noise vector of dimension latent_dim (e.g., 100).
+Customize training parameters:
 
-Dense layer projecting input to 7x7x128 nodes.
+```python
+# Training Configuration
+latent_dim = 100      # Noise vector dimension
+n_epochs = 100        # Training epochs
+n_batch = 256         # Batch size
+learning_rate = 0.0002 # Adam optimizer learning rate
+beta_1 = 0.5          # Adam optimizer momentum
+```
 
-LeakyReLU activation.
+## 📈 Results
 
-Reshape to (7, 7, 128).
+### Training Progress
+- **Loss Curves**: Monitor generator and discriminator losses
+- **Accuracy Metrics**: Track discriminator performance on real vs fake images
+- **Visual Evolution**: See generated digits improve over training epochs
 
-Two Conv2DTranspose layers with LeakyReLU upsampling to (14, 14, 128) then (28, 28, 128).
+### Output Files
+```
+📁 Project Directory
+├── 🖼️ generated_plot_e10.png    # Generated digit grids
+├── 🖼️ generated_plot_e20.png
+├── 💾 generator_model_10.h5     # Saved generator models
+├── 💾 generator_model_20.h5
+└── 📊 Training logs in console
+```
 
-Conv2D with sigmoid activation outputs grayscale image (28, 28, 1).
+## 🔧 Customization Options
 
-Discriminator
-Input: (28, 28, 1) grayscale image.
+### Architecture Modifications
+- Add **Batch Normalization** for training stability
+- Experiment with **different activation functions**
+- Modify **filter sizes and layer depths**
+- Implement **spectral normalization**
 
-Two Conv2D layers (64 filters, 3x3 kernel, stride 2) with LeakyReLU and Dropout (0.4).
+### Advanced Features
+- **Conditional GAN**: Generate specific digits on demand
+- **Progressive Growing**: Start with low resolution and increase
+- **Evaluation Metrics**: Implement FID, IS scores
+- **Different Datasets**: Adapt for CIFAR-10, CelebA, etc.
 
-Flatten.
+### Hyperparameter Tuning
+```python
+# Experiment with these parameters
+latent_dimensions = [50, 100, 200]
+learning_rates = [0.0001, 0.0002, 0.0005]
+batch_sizes = [128, 256, 512]
+```
 
-Dense layer with sigmoid activation outputs probability real/fake.
+## 📊 Performance Monitoring
 
-Optimized with Adam (learning_rate=0.0002, beta_1=0.5).
+Track training progress with built-in metrics:
 
-Loss function: binary crossentropy.
+- **Generator Loss**: How well generator fools discriminator
+- **Discriminator Loss**: How well discriminator detects fakes
+- **Discriminator Accuracy**: Percentage of correct classifications
+- **Visual Quality**: Inspect generated image grids
 
-Combined GAN Model
-Stacks generator and discriminator models.
+## 🛠️ Troubleshooting
 
-Discriminator weights frozen during generator training.
+### Common Issues
 
-Optimized with Adam (learning_rate=0.0002, beta_1=0.5).
+**Training Instability**
+- Reduce learning rate
+- Add noise to discriminator inputs
+- Balance generator/discriminator training frequency
 
-Loss: binary crossentropy.
+**Poor Image Quality**
+- Increase training epochs
+- Adjust network architecture
+- Experiment with different loss functions
 
-Training Process
-For each batch:
+**Memory Issues**
+- Reduce batch size
+- Use gradient accumulation
+- Enable mixed precision training
 
-Train discriminator on half real samples and half fake samples (generated images).
+## 📁 Project Structure
 
-Train generator via combined model with labels pretending generated images are real.
+```
+mnist-gan/
+├── 📄 mnist_gan.py           # Main training script
+├── 📄 requirements.txt       # Dependencies
+├── 📄 README.md             # This file
+├── 📁 outputs/              # Generated images
+│   ├── 🖼️ generated_plot_*.png
+│   └── 💾 generator_model_*.h5
+└── 📁 logs/                 # Training logs
+```
 
-Periodically evaluate and print discriminator accuracy.
+## 🤝 Contributing
 
-Save generated image grids and generator model weights every 10 epochs.
+Contributions are welcome! Here's how you can help:
 
-Outputs
-Console Logs: Training progress including losses and accuracy.
+1. 🍴 Fork the repository
+2. 🌿 Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. 💾 Commit changes (`git commit -m 'Add amazing feature'`)
+4. 📤 Push to branch (`git push origin feature/amazing-feature`)
+5. 🔄 Open a Pull Request
 
-Image Plots: Files named generated_plot_e<epoch_number>.png showing 100 generated digits.
+### Development Setup
+```bash
+# Install development dependencies
+pip install -r requirements-dev.txt
 
-Saved Models: Generator models saved as generator_model_<epoch_number>.h5.
+# Run tests
+python -m pytest tests/
 
-File Description
-mnist_gan.py: Main Python script containing model definitions, training loop, and utilities.
+# Format code
+black mnist_gan.py
+```
 
-requirements.txt: Python package dependencies.
+## 📜 License
 
-generated_plot_e*.png: Generated image grid files.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-generator_model_*.h5: Saved Keras generator models.
+## 👨‍💻 Author
 
-Customization
-Modify architecture: add BatchNormalization, change filter sizes, experiment with activation functions.
+**Behrooz Filzadeh**
+- 📧 Email: behrooz.filzadeh@gmail.com
+- 💼 LinkedIn: [Connect with me](https://linkedin.com/in/behrooz-filzadeh)
+- 🐙 GitHub: [Follow my work](https://github.com/behrooz-filzadeh)
 
-Adjust hyperparameters: latent_dim, learning rate, batch size, epochs.
+## 🙏 Acknowledgments
 
-Use other datasets by adjusting input/output shapes and data loading functions.
+- **MNIST Dataset**: Yann LeCun, Corinna Cortes, and CJ Burges
+- **GAN Architecture**: Ian Goodfellow et al.
+- **TensorFlow/Keras**: Google Brain Team
+- **Community**: All contributors and users
 
-Add advanced GAN evaluation metrics like Inception Score (IS) or Fréchet Inception Distance (FID).
+## 📚 References
 
+- [Generative Adversarial Networks](https://arxiv.org/abs/1406.2661) - Original GAN Paper
+- [MNIST Database](http://yann.lecun.com/exdb/mnist/) - Dataset Information
+- [TensorFlow Documentation](https://tensorflow.org/tutorials/generative/dcgan) - DCGAN Tutorial
+
+---
+
+<div align="center">
+
+**⭐ Star this repository if you found it helpful!**
+
+*Built with ❤️ by Behrooz Filzadeh*
+
+</div>
